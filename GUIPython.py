@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, Text
 import os
+from tkinter import *
 
 screen_height = 700
 screen_width = 700
@@ -8,13 +9,43 @@ ProgramVer = "1.2"
 
 root = tk.Tk()
 root.title("Program Opener " + ProgramVer)
+master_save = []
 apps = []
 
-if os.path.isfile('save.txt'):
-    with open('save.txt', 'r') as f:
-        tempApps =  f.read()
-        tempApps = tempApps.split(',')
-        apps = [x for x in tempApps if x.strip()]
+selected_menu_item = StringVar()
+
+if selected_menu_item.get() == "SelectFile":
+    if os.path.isfile('save.txt'):
+        with open('save.txt', 'r') as f:
+            tempApps =  f.read()
+            tempApps = tempApps.split(',')
+            apps = [x for x in tempApps if x.strip()]
+
+if os.path.isfile('MasterSave.txt'):
+    with open('MasterSave.txt', 'r') as f:
+        tempNames =  f.read()
+        tempNames = tempNames.split(',')
+        master_save = [x for x in tempNames if x.strip()]
+
+def LoadSave():
+   
+
+    if os.path.isfile(selected_menu_item.get() + '.txt'):
+        with open(selected_menu_item.get() + '.txt', 'r') as f:
+            tempApps =  f.read()
+            tempApps = tempApps.split(',')
+            apps = [x for x in tempApps if x.strip()]
+        
+        for widget in LabelFrame.winfo_children():
+            widget.destroy()
+
+        for app in apps:
+            if app == "":
+                apps.remove(app)
+           
+        for app in apps:
+            label = tk.Label(LabelFrame, text=app)
+            label.pack()
 
 
 def OpenDir():
@@ -68,6 +99,16 @@ def ClearList():
     for numapp in range(0, len(apps)):
         apps.pop()
 
+def SaveLibrary():
+    global SaveFileName
+
+    if SaveNameInput.get() == "" or SaveNameInput.get() == " ":
+        SaveFileName = "save"
+    else:
+        SaveFileName = SaveNameInput.get()
+        master_save.append(SaveFileName)
+
+
 
 canvas = tk.Canvas(root, width=900, height=700, bg="#002e22")
 canvas.pack()
@@ -99,12 +140,34 @@ InputBox.pack()
 OpenDirectorySpec = tk.Button(root, text="Open Specific Directory", padx=10, pady=5, fg="white", bg="green", command=OpenDirSpecific)
 OpenDirectorySpec.pack()
 
+SaveNameInput = tk.Entry(root, borderwidth=5, fg="black")
+SaveNameInput.pack()
+
+SaveButton = tk.Button(root, text="Save", padx=10, pady=5, fg="white", bg="green", command=SaveLibrary)
+SaveButton.pack()
+
+selected_menu_item.set("SelectFile")
+
+SelectSaveMenu = tk.OptionMenu(root, selected_menu_item,*master_save)
+SelectSaveMenu.pack()
+
+LoadSaveButton = tk.Button(root, text="Load Save", padx=10, pady=5, fg="white", bg="green", command=LoadSave)
+LoadSaveButton.pack()
+
+
 for app in apps:
     label = tk.Label(LabelFrame, text=app)
     label.pack()
 
 root.mainloop()
 
-with open('save.txt', 'w') as f:
+
+
+with open(SaveFileName + '.txt', 'w') as f:
     for app in apps:
         f.write(app + ',')
+
+with open('MasterSave.txt', 'w') as f:
+    for FileName in master_save:
+        f.write(FileName + ',')
+
