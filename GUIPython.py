@@ -3,6 +3,7 @@ from tkinter import filedialog, Text
 import os
 from tkinter import *
 
+
 screen_height = 700
 screen_width = 700
 ProgramVer = "1.2"
@@ -11,6 +12,7 @@ root = tk.Tk()
 root.title("Program Opener " + ProgramVer)
 master_save = []
 apps = []
+newApps = []
 
 selected_menu_item = StringVar()
 
@@ -31,15 +33,18 @@ if os.path.isfile('MasterSave.txt'):
 
 def LoadSave():
    
+    for widget in LabelFrame.winfo_children():
+            widget.destroy()
+
 
     if os.path.isfile(selected_menu_item.get() + '.txt'):
         with open(selected_menu_item.get() + '.txt', 'r') as f:
             tempApps =  f.read()
             tempApps = tempApps.split(',')
-            apps = [x for x in tempApps if x.strip()]
-        
-        for widget in LabelFrame.winfo_children():
-            widget.destroy()
+
+            for app in tempApps:
+                apps.append(app)
+             
 
         for app in apps:
             if app == "":
@@ -48,6 +53,7 @@ def LoadSave():
         for app in apps:
             label = tk.Label(LabelFrame, text=app)
             label.pack()
+
 
 
 def OpenDir():
@@ -121,10 +127,10 @@ frame.place(relwidth=0.8, relheight=0.8, relx=0.1, rely=0.1)
 LabelFrame = tk.Frame(frame, bg="#b5b5b5")
 LabelFrame.place(relwidth=0.6, relheight=0.75, relx=0.3, rely=0.1)
 
-#Intractable Elements
-
 ButtonElement = tk.Frame(canvas, bg="white")
-ButtonElement.place(relwidth=0.2, relheight=0.2, relx=0.1, rely=0.2)
+ButtonElement.place(relwidth=0.2, relheight=0.7, relx=0.1, rely=0.2)
+
+#Intractable Elements
 
 OpenDirectory = tk.Button(ButtonElement, text="Open Dir", width=10, height=1, fg="white", bg="green", command=OpenDir)
 OpenDirectory.pack()
@@ -138,24 +144,28 @@ RemoveAppButton.pack()
 ClearListButton = tk.Button(ButtonElement, text="Clear List", width=10, height=1, fg="white", bg="green", command=ClearList)
 ClearListButton.pack()
 
-InputBox = tk.Entry(root, borderwidth=5, fg="black")
+
+InputBox = tk.Entry(ButtonElement, borderwidth=5, fg="black")
 InputBox.pack()
 
-OpenDirectorySpec = tk.Button(root, text="Open Specific Directory", padx=10, pady=5, fg="white", bg="green", command=OpenDirSpecific)
+
+OpenDirectorySpec = tk.Button(ButtonElement, text="Open Specific Directory", padx=10, pady=5, fg="white", bg="green", command=OpenDirSpecific)
 OpenDirectorySpec.pack()
 
-SaveNameInput = tk.Entry(root, borderwidth=5, fg="black")
-SaveNameInput.pack()
 
-SaveButton = tk.Button(root, text="Save", padx=10, pady=5, fg="white", bg="green", command=SaveLibrary)
-SaveButton.pack()
+
+SaveNameInput = tk.Entry(ButtonElement, borderwidth=5, fg="black")
+SaveNameInput.place(relx=0.14, rely=0.74)
+
+SaveButton = tk.Button(ButtonElement, text="Save", width=10, height=1, fg="white", bg="green", command=SaveLibrary)
+SaveButton.place(relx=0.28, rely=0.8)
 
 selected_menu_item.set("SelectFile")
 
-SelectSaveMenu = tk.OptionMenu(root, selected_menu_item,*master_save)
+SelectSaveMenu = tk.OptionMenu(ButtonElement, selected_menu_item,*master_save)
 SelectSaveMenu.pack()
 
-LoadSaveButton = tk.Button(root, text="Load Save", padx=10, pady=5, fg="white", bg="green", command=LoadSave)
+LoadSaveButton = tk.Button(ButtonElement, text="Load Save", padx=10, pady=5, fg="white", bg="green", command=LoadSave)
 LoadSaveButton.pack()
 
 
