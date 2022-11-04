@@ -27,6 +27,8 @@ if os.path.isfile('MasterSave.txt'):
         tempNames = tempNames.split(',')
         master_save = [x for x in tempNames if x.strip()]
 
+#Functions
+
 def LoadSave():
    
 
@@ -108,7 +110,7 @@ def SaveLibrary():
         SaveFileName = SaveNameInput.get()
         master_save.append(SaveFileName)
 
-
+#Graphical Elements
 
 canvas = tk.Canvas(root, width=900, height=700, bg="#002e22")
 canvas.pack()
@@ -118,6 +120,8 @@ frame.place(relwidth=0.8, relheight=0.8, relx=0.1, rely=0.1)
 
 LabelFrame = tk.Frame(frame, bg="#b5b5b5")
 LabelFrame.place(relwidth=0.6, relheight=0.75, relx=0.3, rely=0.1)
+
+#Intractable Elements
 
 ButtonElement = tk.Frame(canvas, bg="white")
 ButtonElement.place(relwidth=0.2, relheight=0.2, relx=0.1, rely=0.2)
@@ -161,7 +165,7 @@ for app in apps:
 
 root.mainloop()
 
-
+#Save Files Creation
 
 with open(SaveFileName + '.txt', 'w') as f:
     for app in apps:
